@@ -8,24 +8,35 @@ Name = str
 
 
 class Stack:
-    def __init__(self):
+    def __init__(self, verbose: bool=False):
         self.items = []
+        self.verbose = verbose
 
     def size(self):
         return len(self.items)
 
     def push(self, value):
         self.items.append(value)
+        if self.verbose:
+            print(f'pushing {value} giving {self.items}')
 
     def pop(self):
         if not self.items:
             return None
         value = self.items[-1]
         self.items = self.items[:-1]
+        if self.verbose:
+            print(f'popping {value} leaving {self.items}')
         return value
 
     def dup(self):
         self.push(self.items[-1])
+
+    def swap(self):
+        x = self.pop()
+        y = self.pop()
+        self.push(x)
+        self.push(y)
 
 
 class Definitions:

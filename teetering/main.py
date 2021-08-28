@@ -12,8 +12,11 @@ DEFINITION_END_RE = re.compile(r'^\s*\.')
 OUTPUT_RE = re.compile(r'\boutput\b')
 IF_RE = re.compile(r'\bif\b')
 WHILE_RE = re.compile(r'\bwhile\b')
+EMPTY_RE = re.compile(r'\bempty\b')
+SIZE_RE = re.compile(r'\bsize\b')
 LAMBDA_RE = re.compile(r'\\\w+\b')
 DUP_RE = re.compile(r'\bdup\b')
+SWAP_RE = re.compile(r'\bswap\b')
 POP_RE = re.compile(r'\bpop\b')
 MATHS_2ARGS_RE = re.compile(r'[\+\-\/\*\^\<\>\=]|[\>\<\!]\=')
 NUMBER_RE = re.compile(r'^-?\d+(\.\d*)?')
@@ -107,14 +110,16 @@ def do_while(definitions, stack, outputs, error_location):
         return
     condition_fn = stack.pop()
     loop_fn = stack.pop()
-    stack.dup()
     run_lines(definitions.get_function(condition_fn), definitions, stack, outputs, condition_fn)
     condition = stack.pop()
     while condition:
         run_lines(definitions.get_function(loop_fn), definitions, stack, outputs, loop_fn)
-        stack.dup()
         run_lines(definitions.get_function(condition_fn), definitions, stack, outputs, condition_fn)
         condition = stack.pop()
+
+
+def do_size(stack: Stack):
+    stack.push(stack.size())
 
 
 def run_code_line(
@@ -133,12 +138,16 @@ def run_code_line(
             stack.dup()
         elif POP_RE.match(term):
             stack.pop()
+        elif SWAP_RE.match(term):
+            stack.swap()
         elif LAMBDA_RE.match(term):
             stack.push(term[1:])
         elif IF_RE.match(term):
             do_if(definitions, stack, outputs, error_location)
         elif WHILE_RE.match(term):
             do_while(definitions, stack, outputs, error_location)
+        elif SIZE_RE.match(term):
+            do_size(stack)
         elif OUTPUT_RE.match(term):
             do_output(stack, outputs)
         elif NUMBER_RE.match(term):

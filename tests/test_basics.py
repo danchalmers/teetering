@@ -114,6 +114,7 @@ class TestBasics(unittest.TestCase):
         .
         
         :fn end_while
+        dup
         10 <
         .
         
@@ -125,6 +126,25 @@ class TestBasics(unittest.TestCase):
         self.assertEqual(0, len(outputs.errors))
         self.assertEqual(10, stack.pop())
 
+    def test_while_never(self):
+        program = """
+        :fn loopy
+        1 +
+        .
+
+        :fn end_while
+        dup
+        1 <
+        .
+
+        1  
+        \loopy \end_while while
+        """
+        stack, outputs = run_program(program)
+        self.assertEqual(1, stack.size())
+        self.assertEqual(0, len(outputs.errors))
+        self.assertEqual(1, stack.pop())
+
     def test_pop(self):
         program = """
         1
@@ -135,6 +155,39 @@ class TestBasics(unittest.TestCase):
         self.assertEqual(1, stack.size())
         self.assertEqual(0, len(outputs.errors))
         self.assertEqual(1, stack.pop())
+
+    def test_swap(self):
+        program = """
+        1
+        2
+        swap
+        """
+        stack, outputs = run_program(program)
+        self.assertEqual(2, stack.size())
+        self.assertEqual(0, len(outputs.errors))
+        self.assertEqual(1, stack.pop())
+        self.assertEqual(2, stack.pop())
+
+    def test_size_empty(self):
+        program = """
+        1
+        pop
+        size
+        """
+        stack, outputs = run_program(program)
+        self.assertEqual(1, stack.size())
+        self.assertEqual(0, len(outputs.errors))
+        self.assertEqual(0, stack.pop())
+
+    def test_size_several(self):
+        program = """
+        1 1 1
+        size
+        """
+        stack, outputs = run_program(program)
+        self.assertEqual(4, stack.size())
+        self.assertEqual(0, len(outputs.errors))
+        self.assertEqual(3, stack.pop())
 
 if __name__ == '__main__':
     unittest.main()
