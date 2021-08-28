@@ -14,7 +14,7 @@ IF_RE = re.compile(r'\bif\b')
 WHILE_RE = re.compile(r'\bwhile\b')
 EMPTY_RE = re.compile(r'\bempty\b')
 SIZE_RE = re.compile(r'\bsize\b')
-LAMBDA_RE = re.compile(r'\\\w+\b')
+LAMBDA_RE = re.compile(r'\\(\w+|[\+\-\/\*\^\<\>\=]|[\>\<\!]\=)')
 DUP_RE = re.compile(r'\bdup\b')
 SWAP_RE = re.compile(r'\bswap\b')
 POP_RE = re.compile(r'\bpop\b')
@@ -108,13 +108,23 @@ def do_while(definitions, stack, outputs, error_location):
     if stack.size() < 3:
         outputs.error(f'not enough values on the stack for while in {error_location}')
         return
-    condition_fn = stack.pop()
-    loop_fn = stack.pop()
-    run_lines(definitions.get_function(condition_fn), definitions, stack, outputs, condition_fn)
+    condition_fn_name = stack.pop()
+    if definitions.is_a_function(condition_fn_name):
+        condition_fn = definitions.get_function(condition_fn_name)
+    else:
+        condition_fn = [condition_fn_name]
+
+    loop_fn_name = stack.pop()
+    if definitions.is_a_function(loop_fn_name):
+        loop_fn = definitions.get_function(loop_fn_name)
+    else:
+        loop_fn = [loop_fn_name]
+
+    run_lines(condition_fn, definitions, stack, outputs, condition_fn)
     condition = stack.pop()
     while condition:
-        run_lines(definitions.get_function(loop_fn), definitions, stack, outputs, loop_fn)
-        run_lines(definitions.get_function(condition_fn), definitions, stack, outputs, condition_fn)
+        run_lines(loop_fn, definitions, stack, outputs, loop_fn_name)
+        run_lines(condition_fn, definitions, stack, outputs, condition_fn_name)
         condition = stack.pop()
 
 

@@ -6,10 +6,8 @@ STANDARD_LIBRARY = {
         ':fn done_all',
         '2 size <',
         '.',
-        ':fn add',
-        '+',
-        '.',
+
         '0',
-        '\\add \done_all while',
+        '\+ \done_all while',
     ],
 }
