@@ -14,11 +14,11 @@ IF_RE = re.compile(r'\bif\b')
 WHILE_RE = re.compile(r'\bwhile\b')
 EMPTY_RE = re.compile(r'\bempty\b')
 SIZE_RE = re.compile(r'\bsize\b')
-LAMBDA_RE = re.compile(r'\\(\w+|[\+\-\/\*\^\<\>\=]|[\>\<\!]\=)')
+LAMBDA_RE = re.compile(r'\\(\w+|[\+\-\/\*\^\<\>\=&\|]|[\>\<\!]\=)')
 DUP_RE = re.compile(r'\bdup\b')
 SWAP_RE = re.compile(r'\bswap\b')
 POP_RE = re.compile(r'\bpop\b')
-MATHS_2ARGS_RE = re.compile(r'[\+\-\/\*\^\<\>\=]|[\>\<\!]\=')
+MATHS_2ARGS_RE = re.compile(r'[\+\-\/\*\^\<\>\=&\|]|[\>\<\!]\=')
 NUMBER_RE = re.compile(r'^-?\d+(\.\d*)?')
 
 
@@ -75,7 +75,10 @@ def do_two_arg_maths(term: CodeStr, stack: Stack, outputs: Outputs, error_locati
         stack.push(x >= y)
     elif term == '!=':
         stack.push(x != y)
-
+    elif term == '&':
+        stack.push(x and y)
+    elif term == '|':
+        stack.push(x or y)
 
 def do_if(
         definitions: Definitions,
