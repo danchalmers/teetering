@@ -58,5 +58,31 @@ class StackOpsTestCase(unittest.TestCase):
         self.assertEqual(0, len(outputs.errors))
         self.assertEqual(3, stack.pop())
 
+    def test_split_reverses(self):
+        program = """
+        1 2 3
+        2 split
+        """
+        stack, outputs = run_program(program)
+        self.assertEqual(2, stack.size())
+        self.assertEqual(0, len(outputs.errors))
+        self.assertEqual(2, stack.pop())
+        self.assertEqual(3, stack.pop())
+
+    def test_split_join(self):
+        program = """
+        1 2 3 
+        2 
+        split 
+        sum 
+        join 
+        """
+        stack, outputs = run_program(program)
+        self.assertEqual(2, stack.size())
+        self.assertEqual(0, len(outputs.errors))
+        self.assertEqual(5, stack.pop())
+        self.assertEqual(1, stack.pop())
+
+
 if __name__ == '__main__':
     unittest.main()
