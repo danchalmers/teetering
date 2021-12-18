@@ -71,13 +71,13 @@ class StandardLibraryTestCase(unittest.TestCase):
 
     def test_sum_several(self):
         program = """
-        1 2 3 4 5
+        1 2 3 4 5 6
         sum
         """
         stack, outputs = run_program(program)
         self.assertEqual(1, stack.size())
         self.assertEqual(0, len(outputs.errors))
-        self.assertEqual(15, stack.pop())
+        self.assertEqual(21, stack.pop())
 
 
 if __name__ == '__main__':
