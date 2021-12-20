@@ -2,30 +2,50 @@ from typing import List
 
 from teetering.standard_library import STANDARD_LIBRARY
 
+
 CodeStr = str
 LineNum = int
 Name = str
 
 
 class Stack:
-    def __init__(self):
+    def __repr__(self) -> str:
+        return self.items.__repr__()
+
+    def __init__(self, verbose: bool = False):
         self.items = []
+        self.verbose = verbose
 
     def size(self):
         return len(self.items)
 
     def push(self, value):
         self.items.append(value)
+        if self.verbose:
+            print(f'pushing {value} giving {self.items}')
 
     def pop(self):
         if not self.items:
             return None
-        value = self.items[-1]
+        value = self.last()
         self.items = self.items[:-1]
+        if self.verbose:
+            print(f'popping {value} leaving {self.items}')
         return value
 
+    def last(self):
+        if not self.items:
+            return None
+        return self.items[-1]
+
     def dup(self):
-        self.push(self.items[-1])
+        self.push(self.last())
+
+    def swap(self):
+        x = self.pop()
+        y = self.pop()
+        self.push(x)
+        self.push(y)
 
 
 class Definitions:

@@ -50,5 +50,35 @@ class StandardLibraryTestCase(unittest.TestCase):
         self.assertEqual([], outputs.outputs)
         self.assertEqual(False, stack.pop())
 
+    def test_sum_none(self):
+        program = """
+        sum
+        """
+        stack, outputs = run_program(program)
+        # self.assertEqual(1, stack.size())
+        self.assertEqual(0, len(outputs.errors))
+        self.assertEqual(0, stack.pop())
+
+    def test_sum_one(self):
+        program = """
+        10
+        sum
+        """
+        stack, outputs = run_program(program)
+        self.assertEqual(1, stack.size())
+        self.assertEqual(0, len(outputs.errors))
+        self.assertEqual(10, stack.pop())
+
+    def test_sum_several(self):
+        program = """
+        1 2 3 4 5 6
+        sum
+        """
+        stack, outputs = run_program(program)
+        self.assertEqual(1, stack.size())
+        self.assertEqual(0, len(outputs.errors))
+        self.assertEqual(21, stack.pop())
+
+
 if __name__ == '__main__':
     unittest.main()

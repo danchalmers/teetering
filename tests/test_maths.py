@@ -114,6 +114,42 @@ class TestMaths(unittest.TestCase):
         self.assertEqual(False, stack.pop())
         self.assertEqual(True, stack.pop())
 
+    def test_quotient_1_2(self):
+        program = """
+        1 2 //
+        """
+        stack, outputs = run_program(program)
+        self.assertEqual(1, stack.size())
+        self.assertEqual(0, len(outputs.errors))
+        self.assertEqual(0, stack.pop())
+
+    def test_quotient_6_3(self):
+        program = """
+        6 3 //
+        """
+        stack, outputs = run_program(program)
+        self.assertEqual(1, stack.size())
+        self.assertEqual(0, len(outputs.errors))
+        self.assertEqual(2, stack.pop())
+
+    def test_remainder_1_2(self):
+        program = """
+        1 2 /%
+        """
+        stack, outputs = run_program(program)
+        self.assertEqual(1, stack.size())
+        self.assertEqual(0, len(outputs.errors))
+        self.assertEqual(1, stack.pop())
+
+    def test_remainder_6_3(self):
+        program = """
+        6 3 /%
+        """
+        stack, outputs = run_program(program)
+        self.assertEqual(1, stack.size())
+        self.assertEqual(0, len(outputs.errors))
+        self.assertEqual(0, stack.pop())
+
 
 if __name__ == '__main__':
     unittest.main()
